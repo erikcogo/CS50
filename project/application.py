@@ -1,3 +1,13 @@
+                                    #################################
+                                    ### PROJECT RISK ASSESSMENT   ###
+                                    ### CLIENTS : CITY AND POLICE ###
+                                    ### THE GOAL OF THE APP IS TO ###
+                                    ### EVALUATE THE RISK OF A    ###
+                                    ### PROJECT BEFORE TO DO IT   ###
+                                    ### AND TO COMPARE IT WITH    ###
+                                    ### OTHERS                    ###
+                                    #################################
+
 import os
 
 from cs50 import SQL
@@ -8,6 +18,7 @@ from werkzeug.exceptions import default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
+
 
 # Configure application
 app = Flask(__name__)
