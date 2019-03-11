@@ -12,20 +12,7 @@ $(document).ready(function() {
         }
     })
     
-    //Take datas from application.py
-    var data_from_python = '{{ data }}';
-    var projects; 
-    var counts;
-    var i;
-    alert(data_from_pyhon)
-    var lenght = data_from_python.length;
-    for (i = 0; i < lenght; i++) {
-         project[i] = projects.push('{{ data[i][0] }}');
-         alert(project[i]);
-         count[i] = counts.push('{{ data[i][1]');
-         alert(count[i]);
-    } 
-    
+    /**
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
     
@@ -46,6 +33,7 @@ $(document).ready(function() {
       ['Onions', 1],
       ['Olives', 1],
       ['Zucchini', 1],
+      ['Mushrooms', 3],
       ['Pepperoni', 2]
     ]);
     
@@ -57,5 +45,5 @@ $(document).ready(function() {
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
     chart.draw(data, options);
-    }
+    }**/
 });

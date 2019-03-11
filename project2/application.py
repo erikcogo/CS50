@@ -45,24 +45,27 @@ Session(app)
 db = SQL("sqlite:///BDMisu.db")
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/general", methods=["GET", "POST"])
 @login_required
-def index():
+def general():
     if request.method == "POST":
         # Query database for id
-        rows = db.execute("SELECT id FROM General")
+        rows = db.execute("SELECT analysis_id FROM General")
         if len(rows) != 0:
-            last_id = (rows[-1]["id"])
+            last_id = (rows[-1]["analysis_id"])
             analysis_id = last_id + 1
         else:
             analysis_id = 1
         db.execute("INSERT INTO General (analysis_id, email, analysis_date, analysis_responsible, project_evaluated, team_members, other_unity, collaborative_unity, ref_unity, confirmation, user_id) VALUES(:analysis_id, :email, :date, :resp, :project, :members, :otherUnity, :collabo, :ref, :confirmation, :user_id)", analysis_id=analysis_id, email=request.form.get("email"), date=request.form.get("formDate"), resp=request.form.get("responsible"), project=request.form.get("projectEvaluated"), members=request.form.get("team"), otherUnity=request.form.get("otherUnity"), collabo=request.form.get("collaborativeUnity"), ref=request.form.get("refUnity"), confirmation=request.form.get("confirmation"), user_id = session["user_id"])
-
+        confirmation = db.execute("SELECT confirmation FROM General WHERE user_id = :user_id",
+                          user_id = session["user_id"])
+        print(confirmation)
+        
         return render_template("riskAnalysis.html")
 
         # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("index.html")
+        return render_template("general.html")
 
 @app.route("/riskAnalysis", methods=["GET", "POST"])
 @login_required
@@ -71,13 +74,13 @@ def riskAnalysis():
     if request.method == "POST":
         
         # Query database for id
-        rows = db.execute("SELECT id FROM General")
+        rows = db.execute("SELECT analysis_id FROM General")
         
-        analysis_id = (rows[-1]["id"])
+        analysis_id = (rows[-1]["analysis_id"])
             
         db.execute("INSERT INTO riskAnalysis (analysis_id, legal_dispo, new_procedures, dang_subs, earth_move, m_roads, m_dang_subs, m_nuis, m_ecolo, publics_serv_compromised, pers_concentration, user_id) VALUES(:analysis_id, :legalDispo, :newProcedures, :dangSubs, :earthMove, :mRoads, :mDangSubs, :mNuis, :mEcolo, :publicsServCompromised, :concentration, :user_id)", analysis_id = analysis_id, legalDispo = request.form['specialPermit'], newProcedures = request.form['newProcedures'], dangSubs = request.form['subsDang'], earthMove = request.form['earthMouv'], mRoads = request.form['800mRaiway'], mDangSubs = request.form['distSubsDang'], mNuis = request.form['800mNuis'], mEcolo = request.form['500mEcolo'], publicsServCompromised = request.form['publicsServCompromised'], concentration = request.form['concentration'], user_id = session["user_id"])
         
-        return render_template("results.html")
+        return render_template("index.html")
 
         # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -209,9 +212,9 @@ def changePassword():
         
         return render_template("changePassword.html", username=username)
 
-@app.route("/results", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 @login_required
-def results():
+def index():
     # Query database for data for user_id
         rows = db.execute("SELECT * FROM riskAnalysis WHERE user_id = :user_id", user_id=session["user_id"])
         data = []
@@ -225,15 +228,9 @@ def results():
             for value in row.values():
                 if value == "yes":
                     count += 1
-            #pourcent = (count / 12) * 100
-            #pourcent = round(pourcent,2)
-            #id_data = (project, pourcent)
-            id_data = (project, count)
+            pourcent = round(count/12, 2) * 100
+            id_data = (project, pourcent)
             data.append(id_data)
             print(data)
-        #plt.hist(data,density=1)
-        #plt.plot([1,2,3,4])
-        #plt.ylabel('Label 1')
-        #plt.show()
         return render_template("results.html", data=data)
     

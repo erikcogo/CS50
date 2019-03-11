@@ -1,129 +1,18 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    Results
+{% endblock %}
+    
 {% block main %}
-
-    <div class="col">
-        <form action="/" enctype="multipart/form-data" method="post">
-
-            <div class="form-group">
-                <label>email: </label>
-                <input name="email" id="email" type="email" autofocus required>
-            </div>
-
-            <div class="form-group">
-                <label>Analysis date: </label>
-                <input name="formDate" id="formDate" type="date" required>
-            </div>
-
-            <div class="form-group">
-                <label>Analysis responsible: </label>
-                <input name="responsible" id="responsible" type="text" required>
-            </div>
-
-            <div class="form-group">
-                <label>Project or process evaluated: </label>
-                <input name="projectEvaluated" id="projectEvaluated" type="text" required>
-            </div>
-            <div class="form-group">
-                <label>Team members: </label>
-                <textarea name="team" id="team"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Project is done with another unity ? </label>
-                <input type="radio" name="otherUnity" id="yesUnities" value="yes">
-                <label for="yesUnities">Yes</label>
-                <input type="radio" name="otherUnity" id="noUnities" value="no" checked>
-                <label for="noUnities">No</label>
-            </div>
-
-            <div class="form-group">
-                <label for="collaborativeUnity" class="hiddenDefault">What is the collaborative unity you are working with ?</label>
-                <select name="collaborativeUnity" id="collaborativeUnity" class="hiddenDefault">
-                    <option value="none" checked>None</option>
-                    <option value="arrBeauport">Arrondissement de Beauport</option>
-                    <option value="arrCharlesbourg">Arrondissement de Charlesbourg</option>
-                    <option value="arrCiteLimoilou">Arrondissement de La Cité-Limoilou</option>
-                    <option value="arrHateSaintCharles">Arrondissement de La Haute-Saint-Charles</option>
-                    <option value="arrSainteFoySilleryCapRouge">Arrondissement de Sainte-Foy—Sillery—Cap-Rouge</option>
-                    <option value="arrRivieres">Arrondissement des Rivières</option>
-                    <option value="BurSecuCiv">Bureau de la sécurité civile</option>
-                    <option value="BurGdsEven">Bureau des grands événements</option>
-                    <option value="communications">Communications</option>
-                    <option value="courMunicipale">Cour municipale</option>
-                    <option value="expocite">ExpoCité</option>
-                    <option value="officeTourisme">Office du tourisme</option>
-                    <option value="projetsIndusValo">Projets industriels et de valorisation</option>
-                    <option value="ServCultPatRelInt">Service de la culture, du patrimoine et des relations internationales</option>
-                    <option value="ServGestEquipMotor">Service de la gestion des équipements motorisés</option>
-                    <option value="ServGestImmeu">Service de la gestion des immeubles</option>
-                    <option value="ServPlanifAmenagEnv">Service de la planification de l’aménagement et de l'environnement</option>
-                    <option value="ServEval">Service de l'évaluation</option>
-                    <option value="ServIng">Service de l'ingénierie</option>
-                    <option value="ServInteracCitoyenne">Service de l'interaction citoyenne</option>
-                    <option value="ServPolice">Service de police</option>
-                    <option value="ServProtecIncendie">Service de protection contre l'incendie</option>
-                    <option value="ServAffJuri">Service des affaires juridiques</option>
-                    <option value="ServAppro">Service des approvisionnements</option>
-                    <option value="ServFin">Service des finances</option>
-                    <option value="ServLoisirsSportsVieCommunautaire">Service des loisirs, des sports et de la vie communautaire</option>
-                    <option value="ServRH">Service des ressources humaines</option>
-                    <option value="ServTI">Service des technologies de l'information</option>
-                    <option value="ServDevEcoGdsProjets">Service du développement économique et des grands projets</option>
-                    <option value="ServGreffeArchives">Service du greffe et des archives</option>
-                    <option value="ServTransportMobiliteIntelligente">Service du transport et de la mobilité intelligente</option>
-                    <option value="StratInstitutRelIntergouv">Stratégies institutionnelles et relations intergouvernementales</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="refUnity">For which unity is the analysis : </label>
-                <select name="refUnity" id="refUnity" required>
-                    <option value="arrBeauport" selected>Arrondissement de Beauport</option>
-                    <option value="arrCharlesbourg">Arrondissement de Charlesbourg</option>
-                    <option value="arrCiteLimoilou">Arrondissement de La Cité-Limoilou</option>
-                    <option value="arrHateSaintCharles">Arrondissement de La Haute-Saint-Charles</option>
-                    <option value="arrSainteFoySilleryCapRouge">Arrondissement de Sainte-Foy—Sillery—Cap-Rouge</option>
-                    <option value="arrRivieres">Arrondissement des Rivières</option>
-                    <option value="BurSecuCiv">Bureau de la sécurité civile</option>
-                    <option value="BurGdsEven">Bureau des grands événements</option>
-                    <option value="communications">Communications</option>
-                    <option value="courMunicipale">Cour municipale</option>
-                    <option value="expocite">ExpoCité</option>
-                    <option value="officeTourisme">Office du tourisme</option>
-                    <option value="projetsIndusValo">Projets industriels et de valorisation</option>
-                    <option value="ServCultPatRelInt">Service de la culture, du patrimoine et des relations internationales</option>
-                    <option value="ServGestEquipMotor">Service de la gestion des équipements motorisés</option>
-                    <option value="ServGestImmeu">Service de la gestion des immeubles</option>
-                    <option value="ServPlanifAmenagEnv">Service de la planification de l’aménagement et de l'environnement</option>
-                    <option value="ServEval">Service de l'évaluation</option>
-                    <option value="ServIng">Service de l'ingénierie</option>
-                    <option value="ServInteracCitoyenne">Service de l'interaction citoyenne</option>
-                    <option value="ServPolice">Service de police</option>
-                    <option value="ServProtecIncendie">Service de protection contre l'incendie</option>
-                    <option value="ServAffJuri">Service des affaires juridiques</option>
-                    <option value="ServAppro">Service des approvisionnements</option>
-                    <option value="ServFin">Service des finances</option>
-                    <option value="ServLoisirsSportsVieCommunautaire">Service des loisirs, des sports et de la vie communautaire</option>
-                    <option value="ServRH">Service des ressources humaines</option>
-                    <option value="ServTI">Service des technologies de l'information</option>
-                    <option value="ServDevEcoGdsProjets">Service du développement économique et des grands projets</option>
-                    <option value="ServGreffeArchives">Service du greffe et des archives</option>
-                    <option value="ServTransportMobiliteIntelligente">Service du transport et de la mobilité intelligente</option>
-                    <option value="StratInstitutRelIntergouv">Stratégies institutionnelles et relations intergouvernementales</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <input type="checkbox" name="confirmation" id="confirmation">
-                <label for="confirmation">I want a confirmation email</label>
-            </div>
-
-            <div class="form-group">
-                <button class="btn btn-default" type="submit">Submit</button>
-            </div>
-
-
-        </form>
-
+    <div class="well well-lg">
+        <h1 id="labels"> Pourcentage of risk for each project</h1>
+        <ul>
+            {% for dat in data %}
+                <li>{{ dat[0] }} : {{ dat[1] }} %</li>
+            {% endfor %}
+        </ul>
+    <!--Div that will hold the table chart-->
+    <div id="chart_div"></div>
+    </div>
 {% endblock %}

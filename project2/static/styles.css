@@ -3,7 +3,7 @@ html, body
 {
     height: 100%;
     overflow: auto;
-    background: hsl(200, 100%, 100%);
+    background: hsl(200, 10%, 50%);
 }
 
 /* ensure content is below navbar */
@@ -32,7 +32,7 @@ form
     padding: 15px;
     margin: auto;
     max-width: 600px;
-    background: hsl(250, 80%, 50%)
+    background: hsl(100, 20%, 90%)
 }
 
 /* wrap and scroll preformatted text */
@@ -44,4 +44,12 @@ pre
     white-space: pre-wrap;
 }
 
+.well 
+{
+    background: hsl(100, 20%, 90%)
+}
 
+#chart_div 
+{
+    margin: auto;
+}
