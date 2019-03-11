@@ -1,105 +1,18 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+    Results
 {% endblock %}
-
+    
 {% block main %}
-    <h1>Risk Assessment for your project</h1>
-        <h2>General</h2>
-        <p>
-            <label for="courriel">e-mail</label> :
-            <input type="email" name="email" id="email" required placeholder="user@domain.xx">
-            <span id="email"></span>
-        </p>
-
-        <p>
-            <input type="date" name="dateAnalysis">
-        </p>
-        
-        <p>
-            <label for="responsible">Analysis responsible</label>
-            <input type="text" name="responsible" id="responsible" required>
-            <span id="responsible"></span>
-        </p>
-
-        <p>
-                <label for="projectProcess">Project or process evaluated</label>
-                <input type="text" name="projectProcess" id="projectProcess" required>
-                <span id="projectProcess"></span>
-        </p>
-        
-        <p>
-            <label for="tailleProjet">Taille du projet ou du processus</label>
-            <br>
-            <input type="radio" name="tailleProjet" id="petitProjet" value="petitProjet" checked>
-            <label for="petitProjet">PETIT projet ou procesus</label>
-            <br>
-            <input type="radio" name="tailleProjet" id="moyenProjet" value="moyenProjet">
-            <label for="moyenProjet">MOYEN projet ou processus ou QUELQUES PETITS</label>
-            <br>
-            <input type="radio" name="tailleProjet" id="grandProjet" value="grandProjet">
-            <label for="grandProjet">GRAND projet ou processus ou PLUSIEURS PETITS ou QUELQUES MOYENS</label>
-            <br>
-        </p>
-
-        <p>
-            <label for="equipe">Membres de l'équipe</label>
-            <textarea name="equipe" id="equipe"></textarea>
-        </p>
-
-        <p>
-            <label for="uniteAdminDemandeuse">Unité administrative demandeuse</label>
-            <select name="uniteAdminDemandeuse" id="uniteAdminDemandeuse">
-                <option value="arrBeauport" selected>Arrondissement de Beauport</option>
-                <option value="arrCharlesbourg">Arrondissement de Charlesbourg</option>
-                <option value="arrCiteLimoilou">Arrondissement de La Cité-Limoilou</option>
-                <option value="arrHateSaintCharles">Arrondissement de La Haute-Saint-Charles</option>
-                <option value="arrSainteFoySilleryCapRouge">Arrondissement de Sainte-Foy—Sillery—Cap-Rouge</option>
-                <option value="arrRivieres">Arrondissement des Rivières</option>
-                <option value="BurSecuCiv">Bureau de la sécurité civile</option>
-                <option value="BurGdsEven">Bureau des grands événements</option>
-                <option value="communications">Communications</option>
-                <option value="courMunicipale">Cour municipale</option>
-                <option value="expocite">ExpoCité</option>
-                <option value="officeTourisme">Office du tourisme</option>
-                <option value="projetsIndusValo">Projets industriels et de valorisation</option>
-                <option value="ServCultPatRelInt">Service de la culture, du patrimoine et des relations internationales</option>
-                <option value="ServGestEquipMotor">Service de la gestion des équipements motorisés</option>
-                <option value="ServGestImmeu">Service de la gestion des immeubles</option>
-                <option value="ServPlanifAmenagEnv">Service de la planification de l’aménagement et de l'environnement</option>
-                <option value="ServEval">Service de l'évaluation</option>
-                <option value="ServIng">Service de l'ingénierie</option>
-                <option value="ServInteracCitoyenne">Service de l'interaction citoyenne</option>
-                <option value="ServPolice">Service de police</option>
-                <option value="ServProtecIncendie">Service de protection contre l'incendie</option>
-                <option value="ServAffJuri">Service des affaires juridiques</option>
-                <option value="ServAppro">Service des approvisionnements</option>
-                <option value="ServFin">Service des finances</option>
-                <option value="ServLoisirsSportsVieCommunautaire">Service des loisirs, des sports et de la vie communautaire</option>
-                <option value="ServRH">Service des ressources humaines</option>
-                <option value="ServTI">Service des technologies de l'information</option>
-                <option value="ServDevEcoGdsProjets">Service du développement économique et des grands projets</option>
-                <option value="ServGreffeArchives">Service du greffe et des archives</option>
-                <option value="ServTransportMobiliteIntelligente">Service du transport et de la mobilité intelligente</option>
-                <option value="StratInstitutRelIntergouv">Stratégies institutionnelles et relations intergouvernementales</option>
-            </select>
-        </p>
-        
-        <p>
-            <input type="checkbox" name="confirmation" id="confirmation">
-            <label for="confirmation">M'envoyer un courriel de confirmation</label>
-        </p>
-        
-        <input type="submit" value="Envoyer">
-        <input type="reset" value="Annuler">
-    </form>
-
-    <script>
-        var list = document.getElementById('uniteAdminDemandeuse');
-        list.addEventListener('change', function(){
-        // On affiche le contenu de l'élément <option> ciblé par la propriete selectedIndex
-        alert(list.options[list.selectedIndex].innerHTML);
-        }, true);
-    </script>
+    <div class="well well-lg">
+        <h1 id="labels"> Pourcentage of risk for each project</h1>
+        <ul>
+            {% for dat in data %}
+                <li>{{ dat[0] }} : {{ dat[1] }} %</li>
+            {% endfor %}
+        </ul>
+    <!--Div that will hold the table chart-->
+    <div id="chart_div"></div>
+    </div>
 {% endblock %}

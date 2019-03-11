@@ -8,17 +8,17 @@
                                     ### OTHERS                    ###
                                     #################################
 
-import os
-
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
+#import matplotlib.pyplot as plt
+
 from werkzeug.exceptions import default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
 
+from helpers import apology, login_required, lookup
 
 # Configure application
 app = Flask(__name__)
@@ -28,7 +28,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Ensure responses aren't cached
 
-
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -36,10 +35,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
     
-
-# Custom filter
-#app.jinja_env.filters["usd"] = usd
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -47,82 +42,50 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///rh.db")
+db = SQL("sqlite:///BDMisu.db")
 
 
-@app.route("/")
+@app.route("/general", methods=["GET", "POST"])
 @login_required
-def index():
-    """Show portfolio of stocks"""
-    stocks = db.execute(
-        "SELECT symbol, SUM(shares) as total_shares, price_per_share, stock_name, total_price FROM transactions WHERE user_id = :user_id GROUP BY symbol HAVING total_shares > 0", user_id=session["user_id"])
-    user_id = session["user_id"]
-    
-    rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=user_id)
-    cash_remaining = rows[0]["cash"]
-    
-    return render_template("index.html", stocks=stocks, cash_remaining=cash_remaining)
+def general():
+    if request.method == "POST":
+        # Query database for id
+        rows = db.execute("SELECT analysis_id FROM General")
+        if len(rows) != 0:
+            last_id = (rows[-1]["analysis_id"])
+            analysis_id = last_id + 1
+        else:
+            analysis_id = 1
+        db.execute("INSERT INTO General (analysis_id, email, analysis_date, analysis_responsible, project_evaluated, team_members, other_unity, collaborative_unity, ref_unity, confirmation, user_id) VALUES(:analysis_id, :email, :date, :resp, :project, :members, :otherUnity, :collabo, :ref, :confirmation, :user_id)", analysis_id=analysis_id, email=request.form.get("email"), date=request.form.get("formDate"), resp=request.form.get("responsible"), project=request.form.get("projectEvaluated"), members=request.form.get("team"), otherUnity=request.form.get("otherUnity"), collabo=request.form.get("collaborativeUnity"), ref=request.form.get("refUnity"), confirmation=request.form.get("confirmation"), user_id = session["user_id"])
+        confirmation = db.execute("SELECT confirmation FROM General WHERE user_id = :user_id",
+                          user_id = session["user_id"])
+        print(confirmation)
+        
+        return render_template("riskAnalysis.html")
 
+        # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("general.html")
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/riskAnalysis", methods=["GET", "POST"])
 @login_required
-def buy():
-    """Buy shares of stock"""
+def riskAnalysis():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        quote = lookup(request.form.get("symbol"))
-        # Ensure symbol was submitted
-        if quote == None:
-            return apology("must provide a valid symbol", 400)
-        # Ensure number of shares was submitted
-        if not request.form.get("shares"):
-            return apology("must provide a number of shares", 403)
-        # Check if shares was a positive integer
-        try:
-            shares = int(request.form.get("shares"))
-        except:
-            return apology("shares must be a positive integer", 400)
+        
+        # Query database for id
+        rows = db.execute("SELECT analysis_id FROM General")
+        
+        analysis_id = (rows[-1]["analysis_id"])
+            
+        db.execute("INSERT INTO riskAnalysis (analysis_id, legal_dispo, new_procedures, dang_subs, earth_move, m_roads, m_dang_subs, m_nuis, m_ecolo, publics_serv_compromised, pers_concentration, user_id) VALUES(:analysis_id, :legalDispo, :newProcedures, :dangSubs, :earthMove, :mRoads, :mDangSubs, :mNuis, :mEcolo, :publicsServCompromised, :concentration, :user_id)", analysis_id = analysis_id, legalDispo = request.form['specialPermit'], newProcedures = request.form['newProcedures'], dangSubs = request.form['subsDang'], earthMove = request.form['earthMouv'], mRoads = request.form['800mRaiway'], mDangSubs = request.form['distSubsDang'], mNuis = request.form['800mNuis'], mEcolo = request.form['500mEcolo'], publicsServCompromised = request.form['publicsServCompromised'], concentration = request.form['concentration'], user_id = session["user_id"])
+        
+        return render_template("index.html")
 
-        # Check if # of shares requested was 0
-        if shares <= 0:
-            return apology("can't buy less than or 0 shares", 400)
-        current_price = quote["price"]
-        stock_name = quote["name"]
-        rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
-        
-        # How much $ the user still has in her account
-        cash_remaining = rows[0]["cash"]
-        
-        # Calculate the price of requested shares
-        total_price = shares * current_price
-        
-        if total_price > cash_remaining:
-            return apology("not enough cash")
-        
-        # update table in the database and insert transactions
-        db.execute("UPDATE users SET cash = cash - :price WHERE id = :user_id", price=total_price, user_id=session["user_id"])
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price_per_share, stock_name, total_price) VALUES(:user_id, :symbol, :shares, :price, :name, :total_price)", user_id=session["user_id"], symbol=request.form.get("symbol"), shares=shares, price=current_price, name=stock_name, total_price=total_price)
-        
-        flash("Bought!")
-        
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
+        # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("buy.html")
-
-
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    stocks = db.execute(
-        "SELECT symbol, shares, price_per_share, transacted FROM transactions WHERE user_id = :user_id", user_id=session["user_id"])
-    user_id = session["user_id"]
-    
-    return render_template("history.html", stocks=stocks)
-
-
+        return render_template("riskAnalysis.html")
+        
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -170,29 +133,6 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-
-        # Ensure symbol was submitted
-        if not request.form.get("symbol"):
-            return apology("must provide symbol", 400)
-        
-        quote = lookup(request.form.get("symbol"))
-        if quote == None:
-            return apology("invalid symbol", 400)
-            
-        return render_template("quoted.html", quote=quote)
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("quote.html")
-    
-        
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
@@ -217,8 +157,8 @@ def register():
         if request.form.get("password") != request.form.get("confirmation"):
             return apology("the password and the confirmed password are different", 400)
         hash = generate_password_hash(request.form.get("password"))
-        new_user_id = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
-        username=request.form.get("username"), hash=hash)
+        new_user_id = db.execute("INSERT INTO users (username, hash, email) VALUES (:username, :hash, :email)",
+        username=request.form.get("username"), hash=hash, email=request.form.get("email"))
     
         # Remember the user log in
         session["user_id"] = new_user_id
@@ -272,65 +212,25 @@ def changePassword():
         
         return render_template("changePassword.html", username=username)
 
-
-@app.route("/sell", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 @login_required
-def sell():
-    """Sell shares of stock"""
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        quote = lookup(request.form.get("symbol"))
-        # Ensure symbol was submitted
-        if quote == None:
-            return apology("must provide symbol", 403)
-        # Ensure number of shares was submitted
-        if not request.form.get("shares"):
-            return apology("must provide a number of shares", 403)
-        # Check if shares was a positive integer
-        try:
-            shares = int(request.form.get("shares"))
-        except:
-            return apology("shares must be a positive integer", 400)
-
-        # Check if # of shares requested was 0
-        if shares <= 0:
-            return apology("can't buy less than or 0 shares", 400)
+def index():
+    # Query database for data for user_id
+        rows = db.execute("SELECT * FROM riskAnalysis WHERE user_id = :user_id", user_id=session["user_id"])
+        data = []
+        # Query database for project --- passer par analysis_id et project_name
         
-        current_price = quote["price"]
-        stock_name = quote["name"]
-        symbol = quote["symbol"]
-        
-        stocks = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol", user_id=session["user_id"], symbol=symbol)
-        user_id = session["user_id"]
-        nb_shares = int(stocks[0]["SUM(shares)"])
-        
-        rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=user_id)
-        cash_remaining = rows[0]["cash"]
-        
-        if shares > nb_shares:
-            return apology("not enough shares")
-        
-        total_price = shares * current_price
-        # update table in the database and insert transactions
-        db.execute("UPDATE users SET cash = cash + :price WHERE id = :user_id", price=total_price, user_id=session["user_id"])
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price_per_share, stock_name, total_price) VALUES(:user_id, :symbol, :shares, :price, :name, :total_price)", user_id=session["user_id"], symbol=symbol, shares=-shares, price=current_price, name=stock_name, total_price=total_price)
-        
-        flash("Sold!")
-        
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        stocks = db.execute(
-            "SELECT symbol FROM transactions WHERE user_id = :user_id GROUP BY symbol HAVING SUM(shares) > 0", user_id=session["user_id"])
-        return render_template("sell.html", stocks=stocks)
-
-
-def errorhandler(e):
-    """Handle error"""
-    return apology(e.name, e.code)
-
-
-# listen for errors
-for code in default_exceptions:
-    app.errorhandler(code)(errorhandler)
+        for row in rows:
+            count = 0
+            analysis_id = row["analysis_id"]
+            projects = db.execute("SELECT project_evaluated FROM General WHERE analysis_id = :analysis_id", analysis_id = analysis_id)
+            project = projects[0]["project_evaluated"]
+            for value in row.values():
+                if value == "yes":
+                    count += 1
+            pourcent = round(count/12, 2) * 100
+            id_data = (project, pourcent)
+            data.append(id_data)
+            print(data)
+        return render_template("results.html", data=data)
+    
