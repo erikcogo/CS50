@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div class="col">
+    <form action="/" enctype="multipart/form-data" method="post">
+
+        <div class="form-group">
+                <h3>Risks assessment</h3>
+            </div>
+
+            <div class="form-group">
+                <p>Complete the list of preliminary risk checks below, it will identify if a significant risk or risks may limit your project.<p>
+            </div>
+
+            <div class="form-group">
+                <label>Are there any specific legal or regulatory provisions (ie that go beyond the usual requirements) that will have to be respected for the implementation of the project, activity or process concerned?</label>
+                <label>For example, a special permit must be obtained to carry out work.</label></br>
+                <input type="radio" name="specialPermit" id="yesSpecialPermit" value="yes">
+                <label for="yesSpecialPermit">yes</label></br>
+                <input type="radio" name="specialPermit" id="noSpecialPermit" value="no" checked>
+                <label for="noSpecialPermit">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Are new procedures, procedures, specific training or other procedures necessary for the subsequent design, implementation and operation phases?</label></br>
+                <input type="radio" name="newProcedures" id="yesNewProcedures" value="yes">
+                <label for="yesNewProcedures">Yes</label></br>
+                <input type="radio" name="newProcedures" id="noNewProcedures" value="no" checked>
+                <label for="noNewProcedures">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Does the project foresee the presence of hazardous substances (toxic, flammable, reactive or explosive) on the site in question?</label></br>
+                <input type="radio" name="subsDang" id="yesSubsDang" value="yes">
+                <label for="yesSubsDang">Yes</label></br>
+                <input type="radio" name="subsDang" id="noSubsDang" value="no" checked>
+                <label for="noSubsDang">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Are the planned sites in an area subject to ground movements (landslides, earthquakes, etc.) or floods?</label></br>
+                <input type="radio" name="earthMouv" id="yesEarthMouv" value="yes">
+                <label for="yesEarthMouv">Yes</label></br>
+                <input type="radio" name="earthMouv" id="noEarthMouv" value="no" checked>
+                <label for="noEarthMouv">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Is the site located within 800 m of railway tracks, waterways or a major road carrying dangerous substances or under an air corridor?</label></br>
+                <input type="radio" name="800mRaiway" id="yes800mRaiway" value="yes">
+                <label for="yes800mRaiway">Yes</label></br>
+                <input type="radio" name="800mRaiway" id="no800mRaiway" value="no" checked>
+                <label for="no800mRaiway">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Are there facilities with hazardous substances within 800 m?</label></br>
+                <input type="radio" name="distSubsDang" id="yesDistSubsDang" value="yes">
+                <label for="yesDistSubsDang">Yes</label></br>
+                <input type="radio" name="distSubsDang" id="noDistSubsDang" value="no" checked>
+                <label for="noDistSubsDang">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Can the project generate risks or nuisances for your neighbors located at less than 800 m such as:</label>
+                <label>Buildings housing vulnerable clienteles (eg CHSLD, hospital, CPE) or vulnerable essential infrastructures (eg police station, barracks, drinking water network, natural gas pipelines, power lines or massifs, fiber optics, tower telecommunications, sewer systems, etc.) or other infrastructures (residences, industries, businesses, viaducts, etc.)?</label></br>
+                <input type="radio" name="800mNuis" id="yes800mNuis" value="yes">
+                <label for="yes800mNuis">Yes</label></br>
+                <input type="radio" name="800mNuis" id="no800mNuis" value="no" checked>
+                <label for="no800mNuis">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Are there sensitive ecological areas within 500 m (such as streams, wetlands, forest, etc.) that would be vulnerable to your activities?</label></br>
+                <input type="radio" name="500mEcolo" id="yes500mEcolo" value="yes">
+                <label for="yes500mEcolo">Yes</label></br>
+                <input type="radio" name="500mEcolo" id="no500mEcolo" value="no" checked>
+                <label for="no500mEcolo">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>In the event of an incident during the implementation or operation of the project, are essential services to citizens compromised for a problematic period?</label></br>
+                <input type="radio" name="publicsServCompromised" id="yesPublicsServCompromised" value="yes">
+                <label for="yesPublicsServCompromised">Yes</label></br>
+                <input type="radio" name="publicsServCompromised" id="noPublicsServCompromised" value="no" checked>
+                <label for="noPublicsServCompromised">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <label>Will there be concentration in one place of several hundred people?</label></br>
+                <input type="radio" name="concentration" id="yesConcentration" value="yes">
+                <label for="yesConcentration">Yes</label></br>
+                <input type="radio" name="concentration" id="noConcentration" value="no" checked>
+                <label for="noConcentration">No</label></br>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Submit</button>
+            </div>
+
+
+        </form>
+
+{% endblock %}
